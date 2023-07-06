@@ -7,6 +7,7 @@ import com.az.tmdbshowlist.ui.model.TVShowUI
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import io.mockk.verifySequence
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -45,5 +46,34 @@ internal class TVSViewModelTest {
 
         // Then
         verify(exactly = 1) { tvShowObserver.onChanged(mockList) }
+    }
+
+    @Test
+    fun `Given TVShows where previously fetched When sorting alphabetically Then data is sorted as expected`() {
+        // Given
+        val mockList = listOf<TVShowUI>(
+            mockk {
+                every { showId } returns 1
+                every { showName } returns "B Test Show 1"
+            },
+            mockk {
+                every { showId } returns 2
+                every { showName } returns "A Test Show 1"
+            }
+        )
+        every { tvsRepository.fetchTVShows() } returns mockList
+
+        // When
+        viewModel.fetchTVShows()
+
+        // And
+        viewModel.sortTVShowsAlphabetically()
+
+        // Then
+        val sortedList = mockList.sortedBy { it.showName }
+        verifySequence {
+            tvShowObserver.onChanged(mockList)
+            tvShowObserver.onChanged(sortedList)
+        }
     }
 }

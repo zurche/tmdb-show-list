@@ -16,4 +16,10 @@ class TVSViewModel(private val tvsRepository: TVSRepository) : ViewModel() {
         _tvShowList.value = tvsRepository.fetchTVShows()
     }
 
+    fun sortTVShowsAlphabetically() =
+        _tvShowList.value?.let { currentTvShowList ->
+            val tvShowsByName = currentTvShowList.sortedBy { it.showName }
+            _tvShowList.value = tvShowsByName
+        }
+
 }

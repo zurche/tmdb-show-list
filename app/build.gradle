@@ -61,6 +61,8 @@ dependencies {
     implementation "io.insert-koin:koin-android:$koinVersion"
 
     testImplementation "junit:junit:$jUnitVersion"
+    testImplementation "io.mockk:mockk:${project.mockkVersion}"
+    testImplementation "androidx.arch.core:core-testing:${project.archCoreTestingVersion}"
 
     androidTestImplementation "androidx.test.ext:junit:$extJUnitVersion"
     androidTestImplementation platform("androidx.compose:compose-bom:$composeBomVersion")

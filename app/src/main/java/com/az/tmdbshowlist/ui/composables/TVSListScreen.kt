@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import com.az.tmdbshowlist.ui.composables.components.TVSFloatingActionButton
 import com.az.tmdbshowlist.ui.composables.components.TVShowUIListItem
 import com.az.tmdbshowlist.ui.model.TVShowUI
+import com.az.tmdbshowlist.ui.util.SingleUseEvent
 
 val mockData = MutableLiveData(
     listOf(
@@ -25,6 +26,7 @@ val mockData = MutableLiveData(
 @Preview
 fun TVSListScreen(
     tvShowList: LiveData<List<TVShowUI>> = mockData,
+    showSortButton: LiveData<SingleUseEvent<Boolean>> = MutableLiveData(SingleUseEvent(true)),
     onSortClicked: () -> Unit = {}
 ) {
     val tvShows = tvShowList.observeAsState(initial = emptyList())
@@ -35,5 +37,8 @@ fun TVSListScreen(
         })
     })
 
-    TVSFloatingActionButton(onSortClicked)
+    val showSortButtonEvent = showSortButton.observeAsState(initial = SingleUseEvent(true))
+    if (showSortButtonEvent.value.getContentIfNotHandled() == true) {
+        TVSFloatingActionButton(onSortClicked)
+    }
 }

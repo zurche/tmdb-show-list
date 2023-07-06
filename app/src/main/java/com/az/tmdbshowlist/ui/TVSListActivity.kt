@@ -24,7 +24,7 @@ class TVSListActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    TVSListScreen(viewModel.tvShowList, viewModel::sortTVShowsAlphabetically)
+                    TVSListScreen(viewModel.tvShowList, viewModel.showSortButton, viewModel::sortTVShowsAlphabetically)
                 }
             }
         }

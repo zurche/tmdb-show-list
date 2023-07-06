@@ -6,10 +6,16 @@ import com.az.tmdbshowlist.data.TVSRepository
 import com.az.tmdbshowlist.ui.model.TVShowUI
 import com.az.tmdbshowlist.ui.util.SingleUseEvent
 import io.mockk.CapturingSlot
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifySequence
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -25,14 +31,22 @@ internal class TVSViewModelTest {
     private lateinit var tvShowObserver: Observer<List<TVShowUI>>
     private lateinit var showSortButtonObserver: Observer<SingleUseEvent<Boolean>>
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setup() {
+        Dispatchers.setMain(Dispatchers.Unconfined)
         tvsRepository = mockk()
         viewModel = TVSViewModel(tvsRepository)
         tvShowObserver = mockk(relaxed = true)
         showSortButtonObserver = mockk(relaxed = true)
         viewModel.tvShowList.observeForever(tvShowObserver)
         viewModel.showSortButton.observeForever(showSortButtonObserver)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @After
+    fun cleanup() {
+        Dispatchers.resetMain()
     }
 
     @Test
@@ -44,7 +58,7 @@ internal class TVSViewModelTest {
                 every { showName } returns "Test Show 1"
             }
         )
-        every { tvsRepository.fetchTVShows() } returns mockList
+        coEvery { tvsRepository.fetchTVShows() } returns mockList
 
         // When
         viewModel.fetchTVShows()
@@ -66,7 +80,7 @@ internal class TVSViewModelTest {
                 every { showName } returns "A Test Show 1"
             }
         )
-        every { tvsRepository.fetchTVShows() } returns mockList
+        coEvery { tvsRepository.fetchTVShows() } returns mockList
 
         // When
         viewModel.fetchTVShows()
@@ -95,7 +109,7 @@ internal class TVSViewModelTest {
                 every { showName } returns "A Test Show 1"
             }
         )
-        every { tvsRepository.fetchTVShows() } returns mockList
+        coEvery { tvsRepository.fetchTVShows() } returns mockList
 
         // When
         viewModel.fetchTVShows()

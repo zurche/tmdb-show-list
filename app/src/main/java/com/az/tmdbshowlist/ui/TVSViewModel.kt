@@ -3,9 +3,11 @@ package com.az.tmdbshowlist.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.az.tmdbshowlist.data.TVSRepository
 import com.az.tmdbshowlist.ui.model.TVShowUI
 import com.az.tmdbshowlist.ui.util.SingleUseEvent
+import kotlinx.coroutines.launch
 
 class TVSViewModel(private val tvsRepository: TVSRepository) : ViewModel() {
 
@@ -17,7 +19,7 @@ class TVSViewModel(private val tvsRepository: TVSRepository) : ViewModel() {
     val showSortButton: LiveData<SingleUseEvent<Boolean>>
         get() = _showSortButton
 
-    fun fetchTVShows() {
+    fun fetchTVShows() = viewModelScope.launch {
         _tvShowList.value = tvsRepository.fetchTVShows()
         _showSortButton.value = SingleUseEvent(true)
     }

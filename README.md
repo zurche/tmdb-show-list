@@ -1,6 +1,14 @@
 # TV Show List
 This is an app to go through the catalog of TV shows. The data is consumed through the API: [TMDB](https://developer.themoviedb.org/docs)
 
+## Important Notice
+In order to successfully be able to fetch the data from [TMDB](https://developer.themoviedb.org/docs), you need to add your own TMDB API key in the `gradle.properties` file as follows:
+```properties
+# Update with a valid TMDB API-key here
+TMDB_API_KEY="<YOUR-API-KEY-HERE>"
+```
+Otherwise you'll get a `401 Unauthorized` error in every request the app makes.
+
 ## App Architecture
 The app is build using MVVM architecture along with Jetpack Compose to build the UI.
 It is divided in 2 main layers: ui and data. The ui layer is responsible for displaying the data and the data layer is responsible for fetching the data from the API.

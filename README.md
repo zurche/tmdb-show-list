@@ -13,13 +13,17 @@ Otherwise you'll get a `401 Unauthorized` error in every request the app makes.
 The app is build using MVVM architecture along with Jetpack Compose to build the UI.
 It is divided in 2 main layers: ui and data. The ui layer is responsible for displaying the data and the data layer is responsible for fetching the data from the API.
 
-<img width="1056" alt="Screenshot 2023-07-06 at 15 01 39" src="https://github.com/zurche/tmdb-show-list/assets/15671525/5758a13d-0489-4de7-bef0-7f1fb87e0897">
+<img width="1056" alt="Screenshot 2023-07-06 at 15 01 39" src="https://github.com/zurche/tmdb-show-list/assets/15671525/2ff7ee93-99e0-4056-ab0e-f48bb2cdbee9">
+
 
 ## App Design
 The app consists of a 2 Column List of posters on which the name of the TV Show will be readable. It will also have a [Floating Action Button (FAB)](https://m2.material.io/components/buttons-floating-action-button) to hanlde the sorting action.
 
-<img width="467" alt="Screenshot 2023-07-06 at 15 11 34" src="https://github.com/zurche/tmdb-show-list/assets/15671525/316e1f1f-a6eb-488e-ae48-4fec7125cf4f">
+### Sketch
+<img width="467" alt="Screenshot 2023-07-06 at 15 11 34" src="https://github.com/zurche/tmdb-show-list/assets/15671525/f2cc98f5-1b68-40db-81e4-fde9c37b6052">
 
+### Final
+<img width="467" alt="Screenshot 2023-07-06 at 15 11 34" src="https://github.com/zurche/tmdb-show-list/assets/15671525/ce119c47-60ab-4189-b162-7365dc908c05">
 
 ## Libraries
 Its written in Kotlin and uses the following libraries:

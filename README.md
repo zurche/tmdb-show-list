@@ -5,7 +5,7 @@ This is an app to go through the catalog of TV shows. The data is consumed throu
 The app is build using MVVM architecture along with Jetpack Compose to build the UI.
 It is divided in 2 main layers: ui and data. The ui layer is responsible for displaying the data and the data layer is responsible for fetching the data from the API.
 
-(image of architecture here)
+<img width="1056" alt="Screenshot 2023-07-06 at 15 01 39" src="https://github.com/zurche/tmdb-show-list/assets/15671525/5758a13d-0489-4de7-bef0-7f1fb87e0897">
 
 ## Libraries
 Its written in Kotlin and uses the following libraries:

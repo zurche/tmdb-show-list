@@ -7,6 +7,12 @@ It is divided in 2 main layers: ui and data. The ui layer is responsible for dis
 
 <img width="1056" alt="Screenshot 2023-07-06 at 15 01 39" src="https://github.com/zurche/tmdb-show-list/assets/15671525/5758a13d-0489-4de7-bef0-7f1fb87e0897">
 
+## App Design
+The app consists of a 2 Column List of posters on which the name of the TV Show will be readable. It will also have a [Floating Action Button (FAB)](https://m2.material.io/components/buttons-floating-action-button) to hanlde the sorting action.
+
+<img width="467" alt="Screenshot 2023-07-06 at 15 11 34" src="https://github.com/zurche/tmdb-show-list/assets/15671525/316e1f1f-a6eb-488e-ae48-4fec7125cf4f">
+
+
 ## Libraries
 Its written in Kotlin and uses the following libraries:
  - Asynchronous Work [Coroutines](https://kotlinlang.org/docs/coroutines-overview.html)

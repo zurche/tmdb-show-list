@@ -9,8 +9,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.az.tmdbshowlist.ui.composables.TVSListScreen
 import com.az.tmdbshowlist.ui.theme.TMDBShowListTheme
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class TVSListActivity : ComponentActivity() {
+
+    private val viewModel: TVSViewModel by viewModel()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

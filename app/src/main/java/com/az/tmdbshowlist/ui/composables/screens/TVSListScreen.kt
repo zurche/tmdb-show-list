@@ -1,4 +1,4 @@
-package com.az.tmdbshowlist.ui.composables
+package com.az.tmdbshowlist.ui.composables.screens
 
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid

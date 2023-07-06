@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.az.tmdbshowlist.ui.composables.TVSListScreen
+import com.az.tmdbshowlist.ui.composables.screens.TVSListScreen
 import com.az.tmdbshowlist.ui.theme.TMDBShowListTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

@@ -10,7 +10,7 @@ TMDB_API_KEY="<YOUR-API-KEY-HERE>"
 Otherwise you'll get a `401 Unauthorized` error in every request the app makes.
 
 ## App Architecture
-The app is build using MVVM architecture along with Jetpack Compose to build the UI.
+The app is built using MVVM architecture along with Jetpack Compose to build the UI.
 It is divided in 2 main layers: ui and data. The ui layer is responsible for displaying the data and the data layer is responsible for fetching the data from the API.
 
 <img width="1056" alt="Screenshot 2023-07-06 at 15 01 39" src="https://github.com/zurche/tmdb-show-list/assets/15671525/2ff7ee93-99e0-4056-ab0e-f48bb2cdbee9">

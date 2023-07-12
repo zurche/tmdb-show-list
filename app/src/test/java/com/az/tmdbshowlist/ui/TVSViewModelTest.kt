@@ -3,6 +3,8 @@ package com.az.tmdbshowlist.ui
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.az.tmdbshowlist.data.TVSRepository
+import com.az.tmdbshowlist.ui.ShowListState.Companion.NETWORKING_ERROR_CODE
+import com.az.tmdbshowlist.ui.ShowListState.Companion.NO_DATA_ERROR_CODE
 import com.az.tmdbshowlist.ui.model.TVShowUI
 import com.az.tmdbshowlist.ui.util.SingleUseEvent
 import io.mockk.CapturingSlot
@@ -19,6 +21,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import retrofit2.HttpException
 
 
 internal class TVSViewModelTest {
@@ -28,7 +31,7 @@ internal class TVSViewModelTest {
 
     private lateinit var viewModel: TVSViewModel
     private lateinit var tvsRepository: TVSRepository
-    private lateinit var tvShowObserver: Observer<List<TVShowUI>>
+    private lateinit var showListStateObserver: Observer<ShowListState>
     private lateinit var showSortButtonObserver: Observer<SingleUseEvent<Boolean>>
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -37,9 +40,9 @@ internal class TVSViewModelTest {
         Dispatchers.setMain(Dispatchers.Unconfined)
         tvsRepository = mockk()
         viewModel = TVSViewModel(tvsRepository)
-        tvShowObserver = mockk(relaxed = true)
+        showListStateObserver = mockk(relaxed = true)
         showSortButtonObserver = mockk(relaxed = true)
-        viewModel.tvShowList.observeForever(tvShowObserver)
+        viewModel.tvShowListState.observeForever(showListStateObserver)
         viewModel.showSortButton.observeForever(showSortButtonObserver)
     }
 
@@ -64,7 +67,7 @@ internal class TVSViewModelTest {
         viewModel.fetchTVShows()
 
         // Then
-        verify(exactly = 1) { tvShowObserver.onChanged(mockList) }
+        verify(exactly = 1) { showListStateObserver.onChanged(ShowListState.Success(mockList)) }
     }
 
     @Test
@@ -91,8 +94,8 @@ internal class TVSViewModelTest {
         // Then
         val sortedList = mockList.sortedBy { it.showName }
         verifySequence {
-            tvShowObserver.onChanged(mockList)
-            tvShowObserver.onChanged(sortedList)
+            showListStateObserver.onChanged(ShowListState.Success(mockList))
+            showListStateObserver.onChanged(ShowListState.Success(sortedList))
         }
     }
 
@@ -127,5 +130,36 @@ internal class TVSViewModelTest {
 
         assert(showSortButtonCapturingSlotA.captured.getContentIfNotHandled() == true)
         assert(showSortButtonCapturingSlotB.captured.getContentIfNotHandled() == false)
+    }
+
+    @Test
+    fun `Given TVShows are empty When fetching them from the ViewModel Then error is observed`() {
+        // Given
+        val mockList: List<TVShowUI> = emptyList()
+        coEvery { tvsRepository.fetchTVShows() } returns mockList
+
+        // When
+        viewModel.fetchTVShows()
+
+        // Then
+        verify(exactly = 1) { showListStateObserver.onChanged(ShowListState.Error(NO_DATA_ERROR_CODE)) }
+    }
+
+    @Test
+    fun `Given repository layer throws HTTP Exception When checking for shows Then the expected error is observed`() {
+        // Given
+        coEvery { tvsRepository.fetchTVShows() } throws mockk<HttpException>()
+
+        // When
+        viewModel.fetchTVShows()
+
+        // Then
+        verify(exactly = 1) {
+            showListStateObserver.onChanged(
+                ShowListState.Error(
+                    NETWORKING_ERROR_CODE
+                )
+            )
+        }
     }
 }

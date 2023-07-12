@@ -25,7 +25,7 @@ class TVSListActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     TVSListScreen(
-                        viewModel.tvShowList,
+                        viewModel.tvShowListState,
                         viewModel.showSortButton,
                         viewModel::sortTVShowsAlphabetically
                     )

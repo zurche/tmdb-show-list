@@ -1,6 +1,5 @@
 package com.az.tmdbshowlist.ui.composables.screens
 
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription

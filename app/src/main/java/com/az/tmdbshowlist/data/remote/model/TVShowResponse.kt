@@ -1,6 +1,5 @@
 package com.az.tmdbshowlist.data.remote.model
 
-import com.az.tmdbshowlist.ui.model.TVShowUI
 import com.google.gson.annotations.SerializedName
 
 data class TVShowResponse(
@@ -34,10 +33,3 @@ data class TVShowBody(
     @SerializedName("vote_count")
     val voteCount: Int
 )
-
-fun TVShowBody.toTVShowUI() =
-    TVShowUI(
-        showId = id,
-        showName = name,
-        imagePath = "https://image.tmdb.org/t/p/w500$posterPath"
-    )

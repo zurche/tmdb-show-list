@@ -5,8 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.az.tmdbshowlist.data.TVSRepository
+import com.az.tmdbshowlist.data.remote.model.TVShowBody
 import com.az.tmdbshowlist.ui.ShowListState.Companion.NETWORKING_ERROR_CODE
 import com.az.tmdbshowlist.ui.ShowListState.Companion.NO_DATA_ERROR_CODE
+import com.az.tmdbshowlist.ui.model.TVShowUI
 import com.az.tmdbshowlist.ui.util.SingleUseEvent
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -26,7 +28,8 @@ class TVSViewModel(private val tvsRepository: TVSRepository) : ViewModel() {
             val showList = tvsRepository.fetchTVShows()
 
             if (showList.isNotEmpty()) {
-                _tvShowListState.value = ShowListState.Success(showList)
+                val tvShowUIList = showList.map { it.toTVShowUI() }
+                _tvShowListState.value = ShowListState.Success(tvShowUIList)
             } else {
                 _tvShowListState.value = ShowListState.Error(NO_DATA_ERROR_CODE)
             }
@@ -45,4 +48,10 @@ class TVSViewModel(private val tvsRepository: TVSRepository) : ViewModel() {
             _showSortButton.value = SingleUseEvent(false)
         }
 
+    private fun TVShowBody.toTVShowUI() =
+        TVShowUI(
+            showId = id,
+            showName = name,
+            imagePath = "https://image.tmdb.org/t/p/w500$posterPath"
+        )
 }

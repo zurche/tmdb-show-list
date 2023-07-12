@@ -3,9 +3,9 @@ package com.az.tmdbshowlist.ui
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.az.tmdbshowlist.data.TVSRepository
+import com.az.tmdbshowlist.data.remote.model.TVShowBody
 import com.az.tmdbshowlist.ui.ShowListState.Companion.NETWORKING_ERROR_CODE
 import com.az.tmdbshowlist.ui.ShowListState.Companion.NO_DATA_ERROR_CODE
-import com.az.tmdbshowlist.ui.model.TVShowUI
 import com.az.tmdbshowlist.ui.util.SingleUseEvent
 import io.mockk.CapturingSlot
 import io.mockk.coEvery
@@ -55,10 +55,13 @@ internal class TVSViewModelTest {
     @Test
     fun `Given TVShows exist When fetching them from the ViewModel Then data is published as expected`() {
         // Given
-        val mockList = listOf<TVShowUI>(
-            mockk {
-                every { showId } returns 1
-                every { showName } returns "Test Show 1"
+        val expectedShowId = 1
+        val expectedShowName = "Test Show 1"
+
+        val mockList = listOf<TVShowBody>(
+            mockk(relaxed = true) {
+                every { id } returns expectedShowId
+                every { name } returns expectedShowName
             }
         )
         coEvery { tvsRepository.fetchTVShows() } returns mockList
@@ -67,23 +70,33 @@ internal class TVSViewModelTest {
         viewModel.fetchTVShows()
 
         // Then
-        verify(exactly = 1) { showListStateObserver.onChanged(ShowListState.Success(mockList)) }
+        val tvShowUICapturingSlot = CapturingSlot<ShowListState>()
+        verify(exactly = 1) { showListStateObserver.onChanged(capture(tvShowUICapturingSlot)) }
+
+        val capturedShowsList = (tvShowUICapturingSlot.captured as ShowListState.Success).moviesList
+        assert(capturedShowsList[0].showId == expectedShowId)
+        assert(capturedShowsList[0].showName == expectedShowName)
     }
 
     @Test
     fun `Given TVShows where previously fetched When sorting alphabetically Then data is sorted as expected`() {
         // Given
-        val mockList = listOf<TVShowUI>(
-            mockk {
-                every { showId } returns 1
-                every { showName } returns "B Test Show 1"
+        val firstExpectedId = 1
+        val secondExpectedId = 2
+        val firstExpectedShowName = "B Test Show 1"
+        val secondExpectedShowName = "A Test Show 1"
+
+        val unsortedList = listOf<TVShowBody>(
+            mockk(relaxed = true) {
+                every { id } returns firstExpectedId
+                every { name } returns firstExpectedShowName
             },
-            mockk {
-                every { showId } returns 2
-                every { showName } returns "A Test Show 1"
+            mockk(relaxed = true) {
+                every { id } returns secondExpectedId
+                every { name } returns secondExpectedShowName
             }
         )
-        coEvery { tvsRepository.fetchTVShows() } returns mockList
+        coEvery { tvsRepository.fetchTVShows() } returns unsortedList
 
         // When
         viewModel.fetchTVShows()
@@ -92,24 +105,35 @@ internal class TVSViewModelTest {
         viewModel.sortTVShowsAlphabetically()
 
         // Then
-        val sortedList = mockList.sortedBy { it.showName }
+        val sortedList = unsortedList.sortedBy { it.name }
+
+        val firstTvShowUICapturingSlot = CapturingSlot<ShowListState>()
+        val secondTvShowUICapturingSlot = CapturingSlot<ShowListState>()
         verifySequence {
-            showListStateObserver.onChanged(ShowListState.Success(mockList))
-            showListStateObserver.onChanged(ShowListState.Success(sortedList))
+            showListStateObserver.onChanged(capture(firstTvShowUICapturingSlot))
+            showListStateObserver.onChanged(capture(secondTvShowUICapturingSlot))
         }
+
+        val firstCapturedList =
+            (firstTvShowUICapturingSlot.captured as ShowListState.Success).moviesList
+        val secondCapturedList =
+            (secondTvShowUICapturingSlot.captured as ShowListState.Success).moviesList
+
+        assert(firstCapturedList[0].showId == unsortedList[0].id)
+        assert(secondCapturedList[0].showId == sortedList[0].id)
     }
 
     @Test
     fun `Given show list is sorted Then the sort button event is observed as expected`() {
         // Given
-        val mockList = listOf<TVShowUI>(
-            mockk {
-                every { showId } returns 1
-                every { showName } returns "B Test Show 1"
+        val mockList = listOf<TVShowBody>(
+            mockk(relaxed = true) {
+                every { id } returns 1
+                every { name } returns "B Test Show 1"
             },
-            mockk {
-                every { showId } returns 2
-                every { showName } returns "A Test Show 1"
+            mockk(relaxed = true) {
+                every { id } returns 2
+                every { name } returns "A Test Show 1"
             }
         )
         coEvery { tvsRepository.fetchTVShows() } returns mockList
@@ -135,7 +159,7 @@ internal class TVSViewModelTest {
     @Test
     fun `Given TVShows are empty When fetching them from the ViewModel Then error is observed`() {
         // Given
-        val mockList: List<TVShowUI> = emptyList()
+        val mockList: List<TVShowBody> = emptyList()
         coEvery { tvsRepository.fetchTVShows() } returns mockList
 
         // When
